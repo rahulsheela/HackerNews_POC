@@ -1,12 +1,7 @@
 body {
   margin: 0;
-  font-size: 16px;
-}
-header {
-  width: 100%;
-  background-color: #dc143c;
-  text-align: center;
-  padding: 10px;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .newslist {
   width: 100%;
@@ -22,8 +17,8 @@ header {
   background-color: #e7d8c9;
 }
 .comments {
-  flex: 0 1 50px;
-  max-width: 50px;
+  flex: 0 1 80px;
+  max-width: 80px;
   text-align: center;
 }
 .upvotes {
@@ -31,6 +26,7 @@ header {
   max-width: 50px;
   display: flex;
   justify-content: center;
+  text-align: center;
 }
 .hide-item-wrapper {
   display: block;
@@ -80,13 +76,14 @@ header {
   flex-direction: column;
   vertical-align: middle;
   align-content: center;
+  align-items: center;
   padding: 0 10px;
 }
 
 .pagination {
   padding: 10px;
   font-size: 14px;
-  color: #dc143c;
+  color: #ff6347;
   display: flex;
   justify-content: flex-end;
   flex-direction: row;
@@ -97,7 +94,7 @@ header {
   text-decoration: underline;
   padding: 0 5px;
   border: transparent 1px solid;
-  border-left-color: #dc143c;
+  border-left-color: #ff6347;
   font-weight: bold;
 }
 
@@ -123,6 +120,12 @@ header {
   color: black;
   font-style: normal;
 }
+.news-header {
+  display: flex;
+  padding: 5px 0;
+  background: #ff6347;
+  color: white;
+}
 @media (min-width: 1024px) {
   .details {
     flex-direction: row;
@@ -131,44 +134,3 @@ header {
     display: inline-block;
   }
 }
-
-/*@media (min-width: 320px) and (max-width: 1024px) {
-  details {
-    display: block;
-    margin-top: 5px;
-  }
-  .info-desktop {
-    display: none;
-  }
-  .main {
-    flex: 1;
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-  }
-  .comments {
-    width: 20px;
-  }
-  .upvotes {
-    width: 70px;
-  }
-  .by-text {
-    display: flex;
-  }
-  .author {
-    margin-left: 10px;
-    color: black;
-  }
-  .chart-container {
-    width: 320px;
-    height: 300px;
-  }
-}
-@media (min-width: 1024px) {
-  details {
-    display: none;
-  }
-  .info-desktop {
-    display: flex;
-  }
-}*/

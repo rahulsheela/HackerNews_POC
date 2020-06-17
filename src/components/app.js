@@ -42,6 +42,17 @@ const NewsList = ({ pages, news }) => {
     []
   );
 
+  const getNewsHeader = React.useMemo(() => {
+    return (
+      <div className="news-header">
+        <div className="comments">Comments</div>
+        <div className="upvotes">Vote count</div>
+        <div className="upvote-news">Upvote</div>
+        <div className="details">News Details</div>
+      </div>
+    );
+  });
+
   useEffect(() => {
     setpageIndex(routeMatch.params.page);
   }, [routeMatch.params.page]);
@@ -57,6 +68,7 @@ const NewsList = ({ pages, news }) => {
   return (
     <React.Fragment>
       <div className="newslist">
+        {getNewsHeader}
         {news.map((item, index) => (
           <NewsItem news={item} index={index} key={item.objectID} />
         ))}
