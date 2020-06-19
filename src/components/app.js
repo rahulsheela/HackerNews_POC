@@ -7,7 +7,7 @@ import { Link, useRouteMatch } from "react-router-dom";
 
 import NewsItem from "./newsitem";
 
-import { Chart } from "react-charts";
+import NewsChart from "./newschart";
 
 const NewsList = ({ pages, news }) => {
   NewsList.propTypes = {
@@ -21,26 +21,10 @@ const NewsList = ({ pages, news }) => {
   const dispatch = useDispatch();
 
   const [pageIndex, setpageIndex] = useState((pages && pages.current) || 1);
-  const [chart, setChart] = useState();
+
+  const [newsData, setNewsData] = useState(news);
 
   const routeMatch = useRouteMatch("/news/:page");
-
-  const data = React.useMemo(
-    () => [
-      {
-        data: news.map((item, index = 1) => [index + 1, item.points]),
-      },
-    ],
-    [news]
-  );
-
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: "linear", position: "bottom" },
-      { type: "linear", position: "left" },
-    ],
-    []
-  );
 
   const getNewsHeader = React.useMemo(() => {
     return (
@@ -53,6 +37,47 @@ const NewsList = ({ pages, news }) => {
     );
   });
 
+  const mergeLocalData = (data) => {
+    if (localStorage.getItem("news_list")) {
+      const localData = JSON.parse(localStorage.getItem("news_list"));
+      return data.map((item) => {
+        return localData[item.objectID]
+          ? { ...item, ...localData[item.objectID] }
+          : item;
+      });
+    } else {
+      return data;
+    }
+  };
+
+  const updateNewsPoints = (index, itemId, points) => {
+    let news_updated = [...news];
+    news_updated[index] = { ...news_updated[index], points };
+    setNewsData(news_updated);
+    updateLocalData(itemId, "points", points);
+  };
+
+  const updateNewsHidden = (index, itemId, hidden) => {
+    let news_updated = [...news];
+    news_updated[index] = { ...news_updated[index], hidden };
+    setNewsData(news_updated);
+    updateLocalData(itemId, "hidden", hidden);
+  };
+
+  const updateLocalData = (itemId, key, value) => {
+    let localData;
+    if (localStorage.getItem("news_list")) {
+      const hiddenData = JSON.parse(localStorage.getItem("news_list"));
+      localData = {
+        ...hiddenData,
+        [itemId]: { ...hiddenData[itemId], [key]: value },
+      };
+    } else {
+      localData = { [itemId]: { [key]: value } };
+    }
+    localStorage.setItem("news_list", JSON.stringify(localData));
+  };
+
   useEffect(() => {
     setpageIndex(routeMatch.params.page);
   }, [routeMatch.params.page]);
@@ -62,15 +87,21 @@ const NewsList = ({ pages, news }) => {
   }, [pageIndex]);
 
   useEffect(() => {
-    setChart(<Chart data={data} axes={axes} />);
-  }, [data, axes]);
+    setNewsData(mergeLocalData(news));
+  }, []);
 
   return (
     <React.Fragment>
       <div className="newslist">
         {getNewsHeader}
-        {news.map((item, index) => (
-          <NewsItem news={item} index={index} key={item.objectID} />
+        {newsData.map((item, index) => (
+          <NewsItem
+            news={item}
+            index={index}
+            key={item.objectID}
+            updateNewsPoints={updateNewsPoints}
+            updateNewsHidden={updateNewsHidden}
+          />
         ))}
       </div>
       <div className="pagination">
@@ -80,7 +111,7 @@ const NewsList = ({ pages, news }) => {
         <Link to={`/news/${Number(pageIndex) + 1}`}>Next</Link>
       </div>
       <div className="chart-wrapper">
-        <div className="chart-container">{chart}</div>
+        <NewsChart news={newsData} />
       </div>
     </React.Fragment>
   );
