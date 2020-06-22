@@ -90,6 +90,10 @@ const NewsList = ({ pages, news }) => {
     setNewsData(mergeLocalData(news));
   }, []);
 
+  useEffect(() => {
+    setNewsData(mergeLocalData(news));
+  }, [news]);
+
   return (
     <React.Fragment>
       <div className="newslist">
